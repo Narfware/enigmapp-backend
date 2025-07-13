@@ -24,5 +24,4 @@ describe("Create enigma user", () => {
 
         expect(spySave).toHaveBeenCalledExactlyOnceWith(expected_user)
     })
-
 })
