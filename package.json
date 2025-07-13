@@ -1,0 +1,32 @@
+{
+  "name": "enigmapp-backend",
+  "version": "0.0.0",
+  "description": "Application to process secure messaging",
+  "scripts": {
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest run --coverage",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "build": "tsc"
+  },
+  "keywords": [
+    "enigma",
+    "messaging",
+    "secure"
+  ],
+  "author": "narfware",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.31.0",
+    "@types/node": "^24.0.13",
+    "@typescript-eslint/eslint-plugin": "^8.36.0",
+    "@typescript-eslint/parser": "^8.36.0",
+    "eslint": "^9.31.0",
+    "globals": "^16.3.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.36.0",
+    "vitest": "^3.2.4"
+  }
+}
