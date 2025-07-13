@@ -4,9 +4,11 @@ import { CreateUser } from '../../../../src/enigma/application/commands/createUs
 import { UserRepositoryMock } from '../../__mocks__/userRepositoryMock';
 
 let userRepository: UserRepositoryMock;
+let useCase: CreateUser
 
 beforeEach(() => {
     userRepository = new UserRepositoryMock();
+    useCase = new CreateUser(userRepository)
 })
 
 afterEach(() => {
@@ -16,12 +18,11 @@ afterEach(() => {
 describe("Create enigma user", () => {
     it("Should create an enigma user", async () => {
         const expected_user = new User("uuid", "John Doe", "publicKey")
+        const spySave = vi.spyOn(userRepository, "save")
 
-        const useCase = new CreateUser()
         await useCase.execute({ uuid: "uuid", nickName: "John Doe", publicKey: "publicKey" })
 
-        const spySave = vi.spyOn(userRepository, "save")
-        expect(spySave).toBeCalledWith(expected_user)
+        expect(spySave).toHaveBeenCalledExactlyOnceWith(expected_user)
     })
 
 })

@@ -1,3 +1,6 @@
+import { UserRepository } from "../../domain/repositories/userRepository";
+import { User } from "../../domain/user";
+
 type Params = {
     uuid: string;
     nickName: string;
@@ -5,5 +8,10 @@ type Params = {
 };
 
 export class CreateUser {
-    async execute({ uuid, nickName, publicKey }: Params): Promise<void> { }
+    constructor(private userRepository: UserRepository) {}
+
+    async execute({ uuid, nickName, publicKey }: Params): Promise<void> {
+        const user = User.create(uuid, nickName, publicKey)
+        await this.userRepository.save(user)
+     }
 }

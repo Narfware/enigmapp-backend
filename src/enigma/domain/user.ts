@@ -8,4 +8,10 @@ export class User {
         this._nickName = nickName
         this._publicKey = publicKey
     }
+
+    
+
+    public static create(uuid: string, nickName: string, publicKey: string): User {
+        return new User(uuid, nickName, publicKey)
+    }
 }
