@@ -4,4 +4,7 @@ import { User } from '../../../src/enigma/domain/user'
 
 export class UserRepositoryMock implements UserRepository {
     async save(user: User): Promise<void> {}
+    async find(id: string): Promise<User> {
+        return new User('uuid', 'John Doe', 'publicKey')
+    }
 }
