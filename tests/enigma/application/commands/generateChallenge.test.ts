@@ -1,18 +1,18 @@
 import { describe, it, beforeEach, afterEach, vi, expect } from 'vitest'
 import { UserRepositoryMock } from '../../__mocks__/userRepositoryMock'
 import { User } from '../../../../src/enigma/domain/user'
-import { RetrieveChallenge } from '../../../../src/enigma/application/queries/retrieveChallenge'
+import { GenerateChallenge } from '../../../../src/enigma/application/commands/generateChallenge'
 import { NonceGeneratorMock } from '../../__mocks__/nonceGeneratorMock'
 
 let userRepository: UserRepositoryMock
 let nonceGenerator: NonceGeneratorMock
-let useCase: RetrieveChallenge
+let useCase: GenerateChallenge
 
 beforeEach(() => {
     userRepository = new UserRepositoryMock()
     nonceGenerator = new NonceGeneratorMock()
 
-    useCase = new RetrieveChallenge(userRepository, nonceGenerator)
+    useCase = new GenerateChallenge(userRepository, nonceGenerator)
 })
 
 afterEach(() => {
