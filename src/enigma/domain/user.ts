@@ -1,3 +1,5 @@
+import { NonceGenerator } from './nonceGenerator'
+
 export class User {
     private _uuid: string
     private _nickName: string
@@ -13,5 +15,12 @@ export class User {
 
     public static create(uuid: string, nickName: string, publicKey: string): User {
         return new User(uuid, nickName, publicKey)
+    }
+
+    public generateNonce(nonceGenerator: NonceGenerator): string {
+        const nonce = nonceGenerator.generate()
+        this._nonce = nonce
+
+        return nonce
     }
 }

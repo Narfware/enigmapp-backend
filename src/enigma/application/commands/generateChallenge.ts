@@ -5,7 +5,11 @@ export class GenerateChallenge {
     constructor(private userRepository: UserRepository, private nonceGenerator: NonceGenerator) {}
 
     async execute(id: string) {
-        this.userRepository.find(id)
-        return this.nonceGenerator.generate()
+        const user = await this.userRepository.find(id)
+        const nonce = user.generateNonce(this.nonceGenerator)
+
+        await this.userRepository.save(user)
+
+        return nonce
     }
 }
