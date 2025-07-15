@@ -1,4 +1,4 @@
-import { Server } from "./infrastructure/server";
+import { Server } from './infrastructure/server'
 
 export class EnigmApp {
     server?: Server
@@ -23,6 +23,6 @@ try {
 }
 
 process.on('uncaughtException', err => {
-    console.log('uncaughtException', err);
-    process.exit(1);
-});
+    console.log('uncaughtException', err)
+    process.exit(1)
+})
