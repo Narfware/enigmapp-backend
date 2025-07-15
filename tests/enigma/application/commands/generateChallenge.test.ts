@@ -19,16 +19,19 @@ afterEach(() => {
     vi.restoreAllMocks()
 })
 
-describe('Retrieve challenge', () => {
-    it('Should create a challenge for user', async () => {
+describe('Generate challenge', () => {
+    it('Should generate a nonce and store in the user', async () => {
         const expected_nonce = 'random_string'
         const user = new User('uuid', 'John Doe', 'publicKey')
 
+        const spySave = vi.spyOn(userRepository, 'save')
         vi.spyOn(userRepository, 'find').mockResolvedValue(user)
         vi.spyOn(nonceGenerator, 'generate').mockReturnValue(expected_nonce)
 
         const nonce = await useCase.execute('uuid')
+        const userWithNonce = new User('uuid', 'John Doe', 'publicKey', 'random_string')
 
         expect(nonce).toBe(expected_nonce)
+        expect(spySave).toHaveBeenCalledExactlyOnceWith(userWithNonce)
     })
 })
