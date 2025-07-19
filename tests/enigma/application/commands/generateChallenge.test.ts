@@ -23,14 +23,16 @@ afterEach(() => {
 
 describe('Generate challenge', () => {
     it('Should generate a nonce and store in the user', async () => {
-        const expected_nonce = new Nonce('random_string', Time.now())
+        const now = Time.now()
+
+        const expected_nonce = new Nonce('random_string', now)
         const user = new User('uuid', 'John Doe', 'publicKey')
 
         userRepository.returnOnFind(user)
         nonceGenerator.returnOnGenerate(expected_nonce)
 
         const nonce = await useCase.execute('uuid')
-        const userWithNonce = new User('uuid', 'John Doe', 'publicKey', new Nonce('random_string', Time.now()))
+        const userWithNonce = new User('uuid', 'John Doe', 'publicKey', new Nonce('random_string', now))
 
         userRepository.assertSaveHaveBeenCalledWith(userWithNonce)
         expect(nonce).toBe(expected_nonce)

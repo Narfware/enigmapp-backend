@@ -8,6 +8,6 @@ export class NodeCryptoNonceGenerator implements NonceGenerator {
 
     generate(): Nonce {
         const randomStringInBase64 = randomBytes(16).toString('base64')
-        return new Nonce(randomStringInBase64, this.timeProvider.now().addMinutes(2))
+        return Nonce.create(randomStringInBase64, this.timeProvider)
     }
 }
