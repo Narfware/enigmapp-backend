@@ -1,12 +1,13 @@
 import { NonceGenerator } from './interfaces/nonceGenerator'
+import { Nonce } from './value-objects/nonce'
 
 export class User {
     private readonly _id: string
     private _nickName: string
     private _publicKey: string
-    private _nonce?: string
+    private _nonce?: Nonce
 
-    constructor(id: string, nickName: string, publicKey: string, nonce?: string) {
+    constructor(id: string, nickName: string, publicKey: string, nonce?: Nonce) {
         this._id = id
         this._nickName = nickName
         this._publicKey = publicKey
@@ -17,7 +18,7 @@ export class User {
         return new User(id, nickName, publicKey)
     }
 
-    public generateNonce(nonceGenerator: NonceGenerator): string {
+    public generateNonce(nonceGenerator: NonceGenerator): Nonce {
         const nonce = nonceGenerator.generate()
         this._nonce = nonce
 

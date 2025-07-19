@@ -3,6 +3,8 @@ import { UserRepositoryMock } from '../../__mocks__/userRepositoryMock'
 import { User } from '../../../../src/enigma/domain/user'
 import { GenerateChallenge } from '../../../../src/enigma/application/commands/generateChallenge'
 import { NonceGeneratorMock } from '../../__mocks__/nonceGeneratorMock'
+import { Nonce } from '../../../../src/enigma/domain/value-objects/nonce'
+import { Time } from '../../../../src/enigma/domain/value-objects/time'
 
 let userRepository: UserRepositoryMock
 let nonceGenerator: NonceGeneratorMock
@@ -21,14 +23,14 @@ afterEach(() => {
 
 describe('Generate challenge', () => {
     it('Should generate a nonce and store in the user', async () => {
-        const expected_nonce = 'random_string'
+        const expected_nonce = new Nonce('random_string', Time.now())
         const user = new User('uuid', 'John Doe', 'publicKey')
 
         userRepository.returnOnFind(user)
         nonceGenerator.returnOnGenerate(expected_nonce)
 
         const nonce = await useCase.execute('uuid')
-        const userWithNonce = new User('uuid', 'John Doe', 'publicKey', 'random_string')
+        const userWithNonce = new User('uuid', 'John Doe', 'publicKey', new Nonce('random_string', Time.now()))
 
         userRepository.assertSaveHaveBeenCalledWith(userWithNonce)
         expect(nonce).toBe(expected_nonce)
