@@ -9,6 +9,11 @@ export class Time {
         return new Time(new Date())
     }
 
+    public addMinutes(minutes: number) {
+        const dateWithMinutesAdded = this.date.setMinutes(this.date.getMinutes() + minutes)
+        return Time.fromPrimitives(dateWithMinutesAdded)
+    }
+
     public toPrimitives(): number {
         return this.date.getTime()
     }
