@@ -21,7 +21,7 @@ describe('Create enigma user', () => {
         const spySave = vi.spyOn(userRepository, 'save')
 
         await useCase.execute({
-            uuid: 'uuid',
+            id: 'uuid',
             nickName: 'John Doe',
             publicKey: 'publicKey'
         })
