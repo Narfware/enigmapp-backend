@@ -1,5 +1,5 @@
 import { Mock, vi } from 'vitest'
-import { NonceGenerator } from '../../../src/enigma/domain/nonceGenerator'
+import { NonceGenerator } from '../../../src/enigma/domain/interfaces/nonceGenerator'
 
 export class NonceGeneratorMock implements NonceGenerator {
     private generateMock: Mock

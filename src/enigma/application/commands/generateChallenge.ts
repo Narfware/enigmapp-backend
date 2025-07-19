@@ -1,4 +1,4 @@
-import { NonceGenerator } from '../../domain/nonceGenerator'
+import { NonceGenerator } from '../../domain/interfaces/nonceGenerator'
 import { UserRepository } from '../../domain/repositories/userRepository'
 
 export class GenerateChallenge {

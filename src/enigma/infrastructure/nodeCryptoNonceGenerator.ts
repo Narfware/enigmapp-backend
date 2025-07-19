@@ -1,5 +1,4 @@
-import { NonceGenerator } from '../domain/nonceGenerator'
-
+import { NonceGenerator } from '../domain/interfaces/nonceGenerator'
 import { randomBytes } from 'crypto'
 
 export class NodeCryptoNonceGenerator implements NonceGenerator {

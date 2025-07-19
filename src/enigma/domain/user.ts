@@ -1,4 +1,4 @@
-import { NonceGenerator } from './nonceGenerator'
+import { NonceGenerator } from './interfaces/nonceGenerator'
 
 export class User {
     private readonly _id: string
