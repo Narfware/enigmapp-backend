@@ -21,10 +21,11 @@ afterEach(() => {
 
 describe('Generate challenge', () => {
     it('Should generate a nonce and store in the user', async () => {
-        const expected_nonce = 'random_string'
         const user = new User('uuid', 'John Doe', 'publicKey')
+        userRepository.returnOnFind(user)
 
-        const spySave = vi.spyOn(userRepository, 'save')
+        const expected_nonce = 'random_string'
+
         vi.spyOn(userRepository, 'find').mockResolvedValue(user)
         vi.spyOn(nonceGenerator, 'generate').mockReturnValue(expected_nonce)
 
@@ -32,6 +33,6 @@ describe('Generate challenge', () => {
         const userWithNonce = new User('uuid', 'John Doe', 'publicKey', 'random_string')
 
         expect(nonce).toBe(expected_nonce)
-        expect(spySave).toHaveBeenCalledExactlyOnceWith(userWithNonce)
+        userRepository.assertSaveHaveBeenCalledWith(userWithNonce)
     })
 })

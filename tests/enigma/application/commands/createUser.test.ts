@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, afterEach, vi, expect } from 'vitest'
+import { describe, it, beforeEach, afterEach, vi } from 'vitest'
 import { User } from '../../../../src/enigma/domain/user'
 import { CreateUser } from '../../../../src/enigma/application/commands/createUser'
 import { UserRepositoryMock } from '../../__mocks__/userRepositoryMock'
@@ -18,7 +18,6 @@ afterEach(() => {
 describe('Create enigma user', () => {
     it('Should create an enigma user', async () => {
         const expected_user = new User('uuid', 'John Doe', 'publicKey')
-        const spySave = vi.spyOn(userRepository, 'save')
 
         await useCase.execute({
             id: 'uuid',
@@ -26,6 +25,6 @@ describe('Create enigma user', () => {
             publicKey: 'publicKey'
         })
 
-        expect(spySave).toHaveBeenCalledExactlyOnceWith(expected_user)
+        userRepository.assertSaveHaveBeenCalledWith(expected_user)
     })
 })
