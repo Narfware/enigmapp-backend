@@ -1,11 +1,11 @@
 import { describe, it, beforeEach, afterEach, vi, expect } from 'vitest'
 import { UserRepositoryMock } from '../../__mocks__/userRepositoryMock'
-import { User } from '../../../../src/enigma/domain/user'
-import { Nonce } from '../../../../src/enigma/domain/value-objects/nonce'
-import { Time } from '../../../../src/enigma/domain/value-objects/time'
+
 import { JWTProviderMock } from '../../__mocks__/JWTProviderMock'
 import { SignatureVerifierMock } from '../../__mocks__/signatureVerifierMock'
 import { AuthenticateChallenge } from '../../../../src/enigma/application/authentication/authenticateChallenge'
+import { UserMother } from '../../domain/UserMother'
+import { NonceMother } from '../../domain/NonceMother'
 
 let userRepository: UserRepositoryMock
 let signatureVerifier: SignatureVerifierMock
@@ -25,8 +25,8 @@ afterEach(() => {
 
 describe('Authenticate challenge', () => {
     it('Should generate a JWT token with user information when a valid signature and nonce are received', async () => {
-        const nonce = new Nonce('random_string', Time.now())
-        const user = new User('uuid', 'John Doe', 'public_key', nonce)
+        const nonce = NonceMother.create()
+        const user = UserMother.create()
 
         userRepository.returnOnFind(user)
         jwtProvider.returnOnSignUser('token')
