@@ -1,4 +1,5 @@
 import { NonceGenerator } from './interfaces/nonceGenerator'
+import { SignatureVerifier } from './interfaces/signatureVerifier'
 import { Nonce } from './value-objects/nonce'
 
 export class User {
@@ -23,5 +24,11 @@ export class User {
         this.nonce = nonce
 
         return nonce
+    }
+
+    public verifyNonce(signatureVerifier: SignatureVerifier, nonceValue: string, signature: string): void {
+        if (!this.nonce) return
+
+        signatureVerifier.verifyNonce(this.nonce, this.publicKey, signature)
     }
 }

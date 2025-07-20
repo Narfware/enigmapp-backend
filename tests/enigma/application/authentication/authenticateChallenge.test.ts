@@ -16,7 +16,7 @@ beforeEach(() => {
     userRepository = new UserRepositoryMock()
     signatureVerifier = new SignatureVerifierMock()
     jwtProvider = new JWTProviderMock()
-    useCase = new AuthenticateChallenge()
+    useCase = new AuthenticateChallenge(userRepository, signatureVerifier, jwtProvider)
 })
 
 afterEach(() => {
@@ -31,9 +31,9 @@ describe('Authenticate challenge', () => {
         userRepository.returnOnFind(user)
         jwtProvider.returnOnSignUser('token')
 
-        const token = useCase.execute({
+        const token = await useCase.execute({
             id: 'uuid',
-            nonce: 'random_string',
+            nonceValue: 'random_string',
             signature: 'signature'
         })
 
