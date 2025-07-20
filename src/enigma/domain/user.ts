@@ -26,9 +26,13 @@ export class User {
         return nonce
     }
 
-    public verifyNonce(signatureVerifier: SignatureVerifier, nonceValue: string, signature: string): void {
-        if (!this.nonce) return
-
+    public verifyNonce(
+        signatureVerifier: SignatureVerifier,
+        nonceGenerator: NonceGenerator,
+        nonceValue: string,
+        signature: string
+    ): void {
         signatureVerifier.verifyNonce(this.nonce, this.publicKey, signature)
+        this.nonce = nonceGenerator.generate()
     }
 }

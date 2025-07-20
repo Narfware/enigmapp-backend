@@ -19,7 +19,9 @@ export class AuthenticateChallenge {
 
     public async execute({ id, nonceValue, signature }: Params): Promise<string> {
         const user = await this.userRepository.find(id)
-        user.verifyNonce(this.signatureVerifier, nonceValue, signature)
+        user.verifyNonce(this.signatureVerifier, this.nonceGenerator, nonceValue, signature)
+
+        this.userRepository.save(user)
 
         return this.jwtProvider.signUser(user)
     }
