@@ -1,7 +1,7 @@
 import { describe, it, beforeEach, afterEach, vi, expect } from 'vitest'
 import { UserRepositoryMock } from '../../__mocks__/userRepositoryMock'
 import { User } from '../../../../src/enigma/domain/user'
-import { GenerateChallenge } from '../../../../src/enigma/application/commands/generateChallenge'
+import { GenerateChallenge } from '../../../../src/enigma/application/authentication/generateChallenge'
 import { NonceGeneratorMock } from '../../__mocks__/nonceGeneratorMock'
 import { Nonce } from '../../../../src/enigma/domain/value-objects/nonce'
 import { Time } from '../../../../src/enigma/domain/value-objects/time'
