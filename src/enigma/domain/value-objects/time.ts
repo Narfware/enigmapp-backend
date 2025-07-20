@@ -14,6 +14,11 @@ export class Time {
         return Time.fromPrimitives(dateWithMinutesAdded)
     }
 
+    public subtractMinutes(minutes: number) {
+        const dateWithMinutesSubtracted = this.date.setMinutes(this.date.getMinutes() - minutes)
+        return Time.fromPrimitives(dateWithMinutesSubtracted)
+    }
+
     public toPrimitives(): number {
         return this.date.getTime()
     }

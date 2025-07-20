@@ -11,4 +11,9 @@ export class NonceMother {
 
         return new Nonce(_value, _expirationTime)
     }
+
+    public static expired(): Nonce {
+        const expirationTime = Time.now().subtractMinutes(30)
+        return NonceMother.create(undefined, expirationTime)
+    }
 }

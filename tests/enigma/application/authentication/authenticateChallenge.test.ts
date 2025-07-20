@@ -76,4 +76,19 @@ describe('Authenticate challenge', () => {
 
         userRepository.assertSaveNotCalled()
     })
+
+    it('Should raise an exception when the nonce received has expired', async () => {
+        const user = UserMother.nonceExpired()
+        userRepository.returnOnFind(user)
+
+        await expect(
+            useCase.execute({
+                id: 'uuid',
+                nonceValue: 'random_string',
+                signature: 'signature'
+            })
+        ).rejects.toThrowError(InvalidNonce)
+
+        userRepository.assertSaveNotCalled()
+    })
 })
