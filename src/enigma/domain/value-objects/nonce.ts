@@ -10,6 +10,10 @@ export class Nonce {
         return this.toPrimitives() === nonce.toPrimitives()
     }
 
+    public hasSameValue(value: string): boolean {
+        return this.value == value
+    }
+
     public static create(value: string, timeProvider: TimeProvider): Nonce {
         const expirationTime = timeProvider.now().addMinutes(NONCE_EXPIRATION_TIME_IN_MINUTES)
         return new Nonce(value, expirationTime)

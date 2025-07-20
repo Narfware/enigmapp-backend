@@ -69,7 +69,7 @@ describe('Authenticate challenge', () => {
         await expect(
             useCase.execute({
                 id: 'uuid',
-                nonceValue: 'random_string',
+                nonceValue: 'wrong_nonce',
                 signature: 'signature'
             })
         ).rejects.toThrowError(InvalidNonce)

@@ -1,3 +1,4 @@
+import { InvalidNonce } from './exceptions/invalidNonce'
 import { NonceGenerator } from './interfaces/nonceGenerator'
 import { SignatureVerifier } from './interfaces/signatureVerifier'
 import { Nonce } from './value-objects/nonce'
@@ -32,6 +33,8 @@ export class User {
         nonceValue: string,
         signature: string
     ): void {
+        if (!this.nonce.hasSameValue(nonceValue)) throw new InvalidNonce()
+
         signatureVerifier.verifyNonce(this.nonce, this.publicKey, signature)
         this.nonce = nonceGenerator.generate()
     }
