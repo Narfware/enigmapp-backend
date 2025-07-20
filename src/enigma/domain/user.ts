@@ -6,17 +6,17 @@ export class User {
     private readonly id: string
     private nickName: string
     private publicKey: string
-    private nonce?: Nonce
+    private nonce: Nonce
 
-    constructor(id: string, nickName: string, publicKey: string, nonce?: Nonce) {
+    constructor(id: string, nickName: string, publicKey: string, nonce: Nonce) {
         this.id = id
         this.nickName = nickName
         this.publicKey = publicKey
         this.nonce = nonce
     }
 
-    public static create(id: string, nickName: string, publicKey: string): User {
-        return new User(id, nickName, publicKey)
+    public static create(id: string, nickName: string, publicKey: string, nonce: Nonce): User {
+        return new User(id, nickName, publicKey, nonce)
     }
 
     public generateNonce(nonceGenerator: NonceGenerator): Nonce {
