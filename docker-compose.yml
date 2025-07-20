@@ -1,0 +1,55 @@
+services:
+
+    enigma:
+        image: enigma
+        user: 1001:1001
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: development
+        depends_on:
+            - database
+        stdin_open: true
+        tty: true
+        container_name: enigma-backend
+        environment:
+            - DATABASE_USER=user
+            - DATABASE_PASSWORD=password
+            - DATABASE_URL=postgresql://postgres
+        volumes:
+            - ./:/app
+            - enigma_dist:/app/dist
+            - enigma_node_modules:/app/node_modules
+        ports:
+            - 8080:8080
+
+    database:
+        container_name: postgres
+        image: postgres:13-alpine
+        restart: always
+        ports:
+          - "5432:5432"
+        environment:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: enigma
+        volumes:
+          - ./data:/var/lib/postgresql/data
+
+    pgadmin:
+        image: dpage/pgadmin4
+        restart: always
+        ports:
+          - "8081:80"
+        environment:
+          PGADMIN_DEFAULT_EMAIL: admin@example.com
+          PGADMIN_DEFAULT_PASSWORD: admin
+        depends_on:
+          - database
+
+volumes:
+    enigma_node_modules:
+    enigma_dist:
+networks:
+    default:
+        name: enigma-environment-network
