@@ -2,7 +2,6 @@ import { describe, it, beforeEach, afterEach, vi } from 'vitest'
 import { CreateUser } from '../../../../src/enigma/application/commands/createUser'
 import { UserRepositoryMock } from '../../__mocks__/userRepositoryMock'
 import { NonceGeneratorMock } from '../../__mocks__/nonceGeneratorMock'
-import { UserMother } from '../../domain/UserMother'
 import { NonceMother } from '../../domain/NonceMother'
 import { User } from '../../../../src/enigma/domain/user'
 

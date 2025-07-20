@@ -1,4 +1,5 @@
 import { JWTProvider } from '../../domain/interfaces/JWTProvider'
+import { NonceGenerator } from '../../domain/interfaces/nonceGenerator'
 import { SignatureVerifier } from '../../domain/interfaces/signatureVerifier'
 import { UserRepository } from '../../domain/repositories/userRepository'
 
@@ -12,7 +13,8 @@ export class AuthenticateChallenge {
     constructor(
         private userRepository: UserRepository,
         private signatureVerifier: SignatureVerifier,
-        private jwtProvider: JWTProvider
+        private jwtProvider: JWTProvider,
+        private nonceGenerator: NonceGenerator
     ) {}
 
     public async execute({ id, nonceValue, signature }: Params): Promise<string> {
