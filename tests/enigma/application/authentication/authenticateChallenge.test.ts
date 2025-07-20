@@ -11,6 +11,7 @@ import { User } from '../../../../src/enigma/domain/user'
 import { InvalidNonce } from '../../../../src/enigma/domain/exceptions/invalidNonce'
 import { TimeProviderMock } from '../../__mocks__/timeProviderMock'
 import { Time } from '../../../../src/enigma/domain/value-objects/time'
+import { InvalidNonceSignature } from '../../../../src/enigma/domain/exceptions/invalidNonceSignature'
 
 let userRepository: UserRepositoryMock
 let nonceGenerator: NonceGeneratorMock
@@ -97,6 +98,23 @@ describe('Authenticate challenge', () => {
                 signature: 'signature'
             })
         ).rejects.toThrowError(InvalidNonce)
+
+        userRepository.assertSaveNotCalled()
+    })
+
+    it('Should raise an exception when invalid signature for nonce is received', async () => {
+        const user = UserMother.create()
+        userRepository.returnOnFind(user)
+        signatureVerifier.returnOnCheckIsValidSignatureForNonce(false)
+        timeProvider.returnOnNow(Time.now())
+
+        await expect(
+            useCase.execute({
+                id: 'uuid',
+                nonceValue: 'random_string',
+                signature: 'signature'
+            })
+        ).rejects.toThrowError(InvalidNonceSignature)
 
         userRepository.assertSaveNotCalled()
     })
