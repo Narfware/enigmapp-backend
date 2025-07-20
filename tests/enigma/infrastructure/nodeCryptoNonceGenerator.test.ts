@@ -16,12 +16,14 @@ afterEach(() => {
 })
 
 describe('Create a nonce', () => {
-    it('Should create a nonce with expiration time in two minutes', async () => {
-        const date = new Date(1995, 3, 27, 18, 30)
-        timeProvider.returnOnNow(Time.fromPrimitives(date.getTime()))
+    it('Should create a nonce with expiration time as two minutes from now', async () => {
+        const fixedTime = new Date(1995, 3, 27, 18, 30).getTime()
+        const expectedTime = new Date(1995, 3, 27, 18, 32).getTime()
+
+        timeProvider.returnOnNow(Time.fromPrimitives(fixedTime))
 
         const nonce = nodeCyptoNonceGenerator.generate()
 
-        expect(nonce.toPrimitives().expirationTime).toBe(799000320000)
+        expect(nonce.expirationTime).toStrictEqual(Time.fromPrimitives(expectedTime))
     })
 })
