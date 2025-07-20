@@ -10,9 +10,6 @@ export class Time {
     }
 
     public isBefore(time: Time): boolean {
-        console.log(this.date.getTime())
-        console.log(time.date.getTime())
-
         return this.date.getTime() < time.date.getTime()
     }
 

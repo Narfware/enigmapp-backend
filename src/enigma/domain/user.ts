@@ -1,4 +1,5 @@
 import { InvalidNonce } from './exceptions/invalidNonce'
+import { InvalidNonceSignature } from './exceptions/invalidNonceSignature'
 import { NonceGenerator } from './interfaces/nonceGenerator'
 import { SignatureVerifier } from './interfaces/signatureVerifier'
 import { TimeProvider } from './interfaces/timeProvider'
@@ -38,7 +39,13 @@ export class User {
         if (this.nonce.isExpired(timeProvider.now())) throw new InvalidNonce()
         if (!this.nonce.hasSameValue(nonceValue)) throw new InvalidNonce()
 
-        signatureVerifier.verifyNonce(this.nonce, this.publicKey, signature)
+        const { isValidSignature } = signatureVerifier.checkIsValidSignatureForNonce(
+            this.nonce,
+            this.publicKey,
+            signature
+        )
+        if (!isValidSignature) throw new InvalidNonceSignature()
+
         this.nonce = nonceGenerator.generate()
     }
 }

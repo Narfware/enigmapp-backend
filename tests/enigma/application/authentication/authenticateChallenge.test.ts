@@ -27,6 +27,9 @@ beforeEach(() => {
     jwtProvider = new JWTProviderMock()
     timeProvider = new TimeProviderMock()
 
+    timeProvider.returnOnNow(Time.now())
+    signatureVerifier.returnOnCheckIsValidSignatureForNonce(true)
+
     useCase = new AuthenticateChallenge(userRepository, signatureVerifier, jwtProvider, nonceGenerator, timeProvider)
 })
 
@@ -41,7 +44,6 @@ describe('Authenticate challenge', () => {
 
         userRepository.returnOnFind(user)
         jwtProvider.returnOnSignUser('token')
-        timeProvider.returnOnNow(Time.now())
 
         const token = await useCase.execute({
             id: 'uuid',
@@ -59,7 +61,6 @@ describe('Authenticate challenge', () => {
 
         userRepository.returnOnFind(user)
         nonceGenerator.returnOnGenerate(newNonce)
-        timeProvider.returnOnNow(Time.now())
 
         await useCase.execute({
             id: 'uuid',
@@ -73,7 +74,6 @@ describe('Authenticate challenge', () => {
     it('Should raise an exception when the nonce received does not have the same value', async () => {
         const user = UserMother.create()
         userRepository.returnOnFind(user)
-        timeProvider.returnOnNow(Time.now())
 
         await expect(
             useCase.execute({
@@ -89,7 +89,6 @@ describe('Authenticate challenge', () => {
     it('Should raise an exception when the nonce received has expired', async () => {
         const user = UserMother.nonceExpired()
         userRepository.returnOnFind(user)
-        timeProvider.returnOnNow(Time.now())
 
         await expect(
             useCase.execute({
@@ -106,7 +105,6 @@ describe('Authenticate challenge', () => {
         const user = UserMother.create()
         userRepository.returnOnFind(user)
         signatureVerifier.returnOnCheckIsValidSignatureForNonce(false)
-        timeProvider.returnOnNow(Time.now())
 
         await expect(
             useCase.execute({

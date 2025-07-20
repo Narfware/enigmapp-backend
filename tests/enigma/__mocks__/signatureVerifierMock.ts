@@ -4,13 +4,20 @@ import { Nonce } from '../../../src/enigma/domain/value-objects/nonce'
 
 export class SignatureVerifierMock implements SignatureVerifier {
     private verifyNonceMock: Mock
+    private isValidSignature?: boolean
 
     constructor() {
         this.verifyNonceMock = vi.fn()
     }
 
-    verifyNonce(nonce: Nonce, publicKey: string, signature: string): void {
+    checkIsValidSignatureForNonce(nonce: Nonce, publicKey: string, signature: string): { isValidSignature: boolean } {
         this.verifyNonceMock(nonce, publicKey, signature)
+
+        return { isValidSignature: this.isValidSignature || false }
+    }
+
+    returnOnCheckIsValidSignatureForNonce(isValidSignature: boolean) {
+        this.isValidSignature = isValidSignature
     }
 
     assertVerifyNonceHaveBeenCalledWith(
