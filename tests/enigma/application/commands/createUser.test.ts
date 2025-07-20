@@ -4,6 +4,7 @@ import { UserRepositoryMock } from '../../__mocks__/userRepositoryMock'
 import { NonceGeneratorMock } from '../../__mocks__/nonceGeneratorMock'
 import { UserMother } from '../../domain/UserMother'
 import { NonceMother } from '../../domain/NonceMother'
+import { User } from '../../../../src/enigma/domain/user'
 
 let userRepository: UserRepositoryMock
 let nonceGenerator: NonceGeneratorMock
@@ -24,14 +25,12 @@ describe('Create enigma user', () => {
         const nonce = NonceMother.create()
         nonceGenerator.returnOnGenerate(nonce)
 
-        const expected_user = UserMother.create()
-
         await useCase.execute({
             id: 'uuid',
             nickName: 'John Doe',
             publicKey: 'public_key'
         })
 
-        userRepository.assertSaveHaveBeenCalledWith(expected_user)
+        userRepository.assertSaveHaveBeenCalledWith(new User('uuid', 'John Doe', 'public_key', nonce))
     })
 })
