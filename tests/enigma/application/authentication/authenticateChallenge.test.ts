@@ -9,11 +9,14 @@ import { NonceMother } from '../../domain/NonceMother'
 import { NonceGeneratorMock } from '../../__mocks__/nonceGeneratorMock'
 import { User } from '../../../../src/enigma/domain/user'
 import { InvalidNonce } from '../../../../src/enigma/domain/exceptions/invalidNonce'
+import { TimeProviderMock } from '../../__mocks__/timeProviderMock'
+import { Time } from '../../../../src/enigma/domain/value-objects/time'
 
 let userRepository: UserRepositoryMock
 let nonceGenerator: NonceGeneratorMock
 let signatureVerifier: SignatureVerifierMock
 let jwtProvider: JWTProviderMock
+let timeProvider: TimeProviderMock
 let useCase: AuthenticateChallenge
 
 beforeEach(() => {
@@ -21,7 +24,9 @@ beforeEach(() => {
     nonceGenerator = new NonceGeneratorMock()
     signatureVerifier = new SignatureVerifierMock()
     jwtProvider = new JWTProviderMock()
-    useCase = new AuthenticateChallenge(userRepository, signatureVerifier, jwtProvider, nonceGenerator)
+    timeProvider = new TimeProviderMock()
+
+    useCase = new AuthenticateChallenge(userRepository, signatureVerifier, jwtProvider, nonceGenerator, timeProvider)
 })
 
 afterEach(() => {
@@ -35,6 +40,7 @@ describe('Authenticate challenge', () => {
 
         userRepository.returnOnFind(user)
         jwtProvider.returnOnSignUser('token')
+        timeProvider.returnOnNow(Time.now())
 
         const token = await useCase.execute({
             id: 'uuid',
@@ -52,6 +58,7 @@ describe('Authenticate challenge', () => {
 
         userRepository.returnOnFind(user)
         nonceGenerator.returnOnGenerate(newNonce)
+        timeProvider.returnOnNow(Time.now())
 
         await useCase.execute({
             id: 'uuid',
@@ -65,6 +72,7 @@ describe('Authenticate challenge', () => {
     it('Should raise an exception when the nonce received does not have the same value', async () => {
         const user = UserMother.create()
         userRepository.returnOnFind(user)
+        timeProvider.returnOnNow(Time.now())
 
         await expect(
             useCase.execute({
@@ -80,6 +88,7 @@ describe('Authenticate challenge', () => {
     it('Should raise an exception when the nonce received has expired', async () => {
         const user = UserMother.nonceExpired()
         userRepository.returnOnFind(user)
+        timeProvider.returnOnNow(Time.now())
 
         await expect(
             useCase.execute({

@@ -1,6 +1,7 @@
 import { InvalidNonce } from './exceptions/invalidNonce'
 import { NonceGenerator } from './interfaces/nonceGenerator'
 import { SignatureVerifier } from './interfaces/signatureVerifier'
+import { TimeProvider } from './interfaces/timeProvider'
 import { Nonce } from './value-objects/nonce'
 
 export class User {
@@ -30,9 +31,11 @@ export class User {
     public verifyNonce(
         signatureVerifier: SignatureVerifier,
         nonceGenerator: NonceGenerator,
+        timeProvider: TimeProvider,
         nonceValue: string,
         signature: string
     ): void {
+        if (this.nonce.isExpired(timeProvider.now())) throw new InvalidNonce()
         if (!this.nonce.hasSameValue(nonceValue)) throw new InvalidNonce()
 
         signatureVerifier.verifyNonce(this.nonce, this.publicKey, signature)

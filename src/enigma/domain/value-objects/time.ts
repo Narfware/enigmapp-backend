@@ -9,12 +9,19 @@ export class Time {
         return new Time(new Date())
     }
 
-    public addMinutes(minutes: number) {
+    public isBefore(time: Time): boolean {
+        console.log(this.date.getTime())
+        console.log(time.date.getTime())
+
+        return this.date.getTime() < time.date.getTime()
+    }
+
+    public addMinutes(minutes: number): Time {
         const dateWithMinutesAdded = this.date.setMinutes(this.date.getMinutes() + minutes)
         return Time.fromPrimitives(dateWithMinutesAdded)
     }
 
-    public subtractMinutes(minutes: number) {
+    public subtractMinutes(minutes: number): Time {
         const dateWithMinutesSubtracted = this.date.setMinutes(this.date.getMinutes() - minutes)
         return Time.fromPrimitives(dateWithMinutesSubtracted)
     }

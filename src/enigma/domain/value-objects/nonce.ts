@@ -14,6 +14,10 @@ export class Nonce {
         return this.value == value
     }
 
+    public isExpired(now: Time): boolean {
+        return this.expirationTime.isBefore(now)
+    }
+
     public static create(value: string, timeProvider: TimeProvider): Nonce {
         const expirationTime = timeProvider.now().addMinutes(NONCE_EXPIRATION_TIME_IN_MINUTES)
         return new Nonce(value, expirationTime)
