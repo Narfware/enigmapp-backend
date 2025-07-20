@@ -26,4 +26,8 @@ export class Nonce {
     public toPrimitives(): { value: string; expirationTime: number } {
         return { value: this.value, expirationTime: this.expirationTime.toPrimitives() }
     }
+
+    public static fromPrimitives({ value, expirationTime }: { value: string; expirationTime: number }) {
+        return new Nonce(value, Time.fromPrimitives(expirationTime))
+    }
 }

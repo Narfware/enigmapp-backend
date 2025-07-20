@@ -5,6 +5,13 @@ import { SignatureVerifier } from './interfaces/signatureVerifier'
 import { TimeProvider } from './interfaces/timeProvider'
 import { Nonce } from './value-objects/nonce'
 
+export type PrimitiveUser = {
+    id: string
+    nickName: string
+    publicKey: string
+    nonce: { value: string; expirationTime: number }
+}
+
 export class User {
     private readonly id: string
     private nickName: string
@@ -47,5 +54,13 @@ export class User {
         if (!isValidSignature) throw new InvalidNonceSignature()
 
         this.nonce = nonceGenerator.generate()
+    }
+
+    public static fromPrimitives({ id, nickName, publicKey, nonce }: PrimitiveUser): User {
+        return new User(id, nickName, publicKey, Nonce.fromPrimitives(nonce))
+    }
+
+    public toPrimitives(): PrimitiveUser {
+        return { id: this.id, nickName: this.nickName, publicKey: this.publicKey, nonce: this.nonce.toPrimitives() }
     }
 }
