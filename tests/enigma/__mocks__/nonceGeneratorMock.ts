@@ -1,7 +1,7 @@
 import { Mock, vi } from 'vitest'
 import { NonceGenerator } from '../../../src/enigma/domain/interfaces/nonceGenerator'
 import { Nonce } from '../../../src/enigma/domain/value-objects/nonce'
-import { Time } from '../../../src/enigma/domain/value-objects/time'
+import { NonceMother } from '../domain/NonceMother'
 
 export class NonceGeneratorMock implements NonceGenerator {
     private generateMock: Mock
@@ -18,7 +18,7 @@ export class NonceGeneratorMock implements NonceGenerator {
     generate(): Nonce {
         this.generateMock()
 
-        if (!this.nonce) return new Nonce('random_string', Time.now())
+        if (!this.nonce) return NonceMother.create()
 
         return this.nonce
     }

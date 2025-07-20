@@ -1,6 +1,7 @@
 import { UserRepository } from '../../../src/enigma/domain/repositories/userRepository'
 import { User } from '../../../src/enigma/domain/user'
 import { Mock, vi, expect } from 'vitest'
+import { UserMother } from '../domain/UserMother'
 
 export class UserRepositoryMock implements UserRepository {
     private saveMock: Mock
@@ -19,7 +20,7 @@ export class UserRepositoryMock implements UserRepository {
     async find(id: string): Promise<User> {
         this.findUser(id)
 
-        if (!this.user) return new User('id', 'nullObject', 'publicKey')
+        if (!this.user) return UserMother.create()
 
         return this.user
     }
@@ -30,5 +31,9 @@ export class UserRepositoryMock implements UserRepository {
 
     assertSaveHaveBeenCalledWith(expected: User): void {
         expect(this.saveMock).toHaveBeenCalledWith(expected)
+    }
+
+    assertSaveNotCalled(): void {
+        expect(this.saveMock).toHaveBeenCalledTimes(0)
     }
 }

@@ -8,6 +8,7 @@ import { UserMother } from '../../domain/UserMother'
 import { NonceMother } from '../../domain/NonceMother'
 import { NonceGeneratorMock } from '../../__mocks__/nonceGeneratorMock'
 import { User } from '../../../../src/enigma/domain/user'
+import { InvalidNonce } from '../../../../src/enigma/domain/exceptions/invalidNonce'
 
 let userRepository: UserRepositoryMock
 let nonceGenerator: NonceGeneratorMock
@@ -59,5 +60,20 @@ describe('Authenticate challenge', () => {
         })
 
         userRepository.assertSaveHaveBeenCalledWith(new User('uuid', 'John Doe', 'public_key', newNonce))
+    })
+
+    it('Should raise an exception when the nonce received does not have the same value', async () => {
+        const user = UserMother.create()
+        userRepository.returnOnFind(user)
+
+        await expect(
+            useCase.execute({
+                id: 'uuid',
+                nonceValue: 'random_string',
+                signature: 'signature'
+            })
+        ).rejects.toThrowError(InvalidNonce)
+
+        userRepository.assertSaveNotCalled()
     })
 })
