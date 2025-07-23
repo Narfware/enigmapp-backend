@@ -1,4 +1,4 @@
-import { Server } from './infrastructure/server'
+import { Server } from './shared/infrastructure/server'
 
 export class EnigmApp {
     server?: Server
