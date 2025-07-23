@@ -1,14 +1,20 @@
 import { eq } from 'drizzle-orm'
 import { UserRepository } from '../../domain/repositories/userRepository'
 import { User } from '../../domain/user'
-import { database } from '../../../../shared/infrastructure/persistence/postgres/drizzle/connection'
 import { usersTable } from '../persistence/postgres/drizzle/schemas/userSchema'
+import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 
-export class PostgresUserRepository implements UserRepository {
+export class DrizzlePostgresUserRepository implements UserRepository {
+    private database: NodePgDatabase
+
+    constructor(database: NodePgDatabase) {
+        this.database = database
+    }
+
     async save(user: User): Promise<void> {
         const primitiveUser = user.toPrimitives()
 
-        await database.insert(usersTable).values({
+        await this.database.insert(usersTable).values({
             id: primitiveUser.id,
             nickName: primitiveUser.nickName,
             publicKey: primitiveUser.nickName,
@@ -18,7 +24,7 @@ export class PostgresUserRepository implements UserRepository {
     }
 
     async find(id: string): Promise<User> {
-        const results = await database.select().from(usersTable).where(eq(usersTable.id, id))
+        const results = await this.database.select().from(usersTable).where(eq(usersTable.id, id))
         const user = results[0]
 
         return User.fromPrimitives({

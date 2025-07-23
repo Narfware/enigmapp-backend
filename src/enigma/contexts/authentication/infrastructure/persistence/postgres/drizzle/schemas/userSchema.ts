@@ -1,11 +1,9 @@
-import { InferSelectModel } from 'drizzle-orm'
-import { pgTable, varchar, integer } from 'drizzle-orm/pg-core'
+import { bigint, pgTable, varchar } from 'drizzle-orm/pg-core'
 
 export const usersTable = pgTable('users', {
     id: varchar().primaryKey(),
     nickName: varchar().notNull(),
     publicKey: varchar().notNull(),
     nonce: varchar().notNull(),
-    nonceExpirationTime: integer().notNull()
+    nonceExpirationTime: bigint({ mode: 'number' }).notNull()
 })
-export type DrizzleUser = InferSelectModel<typeof usersTable>

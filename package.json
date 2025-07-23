@@ -20,13 +20,13 @@
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "^9.31.0",
+    "@testcontainers/postgresql": "^11.4.0",
     "@types/compression": "^1.8.1",
     "@types/express": "^5.0.3",
     "@types/node": "^24.0.13",
     "@types/pg": "^8.15.4",
     "@typescript-eslint/eslint-plugin": "^8.36.0",
     "@typescript-eslint/parser": "^8.36.0",
-    "drizzle-kit": "^0.18.1",
     "eslint": "^9.31.0",
     "globals": "^16.3.0",
     "ts-node": "^10.9.2",
@@ -38,6 +38,7 @@
   "dependencies": {
     "compression": "^1.8.0",
     "dotenv": "^17.2.0",
+    "drizzle-kit": "^0.31.4",
     "drizzle-orm": "^0.44.3",
     "express": "^5.1.0",
     "helmet": "^8.1.0",
