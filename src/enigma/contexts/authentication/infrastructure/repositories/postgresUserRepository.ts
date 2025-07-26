@@ -17,7 +17,7 @@ export class DrizzlePostgresUserRepository implements UserRepository {
         await this.database.insert(usersTable).values({
             id: primitiveUser.id,
             nickName: primitiveUser.nickName,
-            publicKey: primitiveUser.nickName,
+            publicKey: primitiveUser.publicKey,
             nonce: primitiveUser.nonce.value,
             nonceExpirationTime: primitiveUser.nonce.expirationTime
         })
