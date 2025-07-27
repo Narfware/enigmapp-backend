@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken'
 let jwtProvider: Auth0JWTProvider
 
 beforeEach(() => {
+    process.env.JWT_PRIVATE_KEY = 'privateKey'
     jwtProvider = new Auth0JWTProvider()
 })
 
@@ -22,8 +23,8 @@ describe('Auth0 JWT provider', () => {
 
         if (!decodedToken) throw Error('Decode token failed')
 
-        console.log(decodedToken)
-
-        expect(decodedToken.uuid).toBe('uuid')
+        expect(decodedToken.sub).toBe('uuid')
+        expect(decodedToken.aud).toBe('enigma-app')
+        expect(decodedToken.iss).toBe('enigma')
     })
 })
