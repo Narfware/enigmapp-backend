@@ -13,9 +13,7 @@ services:
         tty: true
         container_name: enigma-backend
         environment:
-            - DATABASE_USER=user
-            - DATABASE_PASSWORD=password
-            - DATABASE_URL=postgresql://postgres
+            - DATABASE_URL=postgresql://user:password@postgres:5432/enigma
         volumes:
             - ./:/app
             - enigma_dist:/app/dist
@@ -25,7 +23,7 @@ services:
 
     database:
         container_name: postgres
-        image:
+        image: postgres:13-alpine
         restart: always
         ports:
           - "5432:5432"
