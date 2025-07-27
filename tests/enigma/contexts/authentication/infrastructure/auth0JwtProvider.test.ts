@@ -22,6 +22,8 @@ describe('Auth0 JWT provider', () => {
 
         if (!decodedToken) throw Error('Decode token failed')
 
+        console.log(decodedToken)
+
         expect(decodedToken.uuid).toBe('uuid')
     })
 })
