@@ -1,7 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import { UserMother } from '../../domain/UserMother'
 import { DrizzlePostgresUserRepository } from '../../../../../../src/enigma/contexts/authentication/infrastructure/repositories/postgresUserRepository'
-import { DrizzleManager } from '../../../../../../src/enigma/shared/infrastructure/persistence/postgres/drizzle/connection'
 import { DrizzlePostgresArranger } from '../../../../shared/infrastructure/persistence/drizzlePostgresArranger'
 import { usersTable } from '../../../../../../src/enigma/contexts/authentication/infrastructure/persistence/postgres/drizzle/schemas/userSchema'
 import { User } from '../../../../../../src/enigma/contexts/authentication/domain/user'
@@ -16,13 +15,11 @@ const arranger = new DrizzlePostgresArranger()
 let database: NodePgDatabase
 
 beforeAll(async () => {
-    await arranger.initializeDatabase()
+    database = await arranger.initializeDatabase()
 })
 
 beforeEach(async () => {
     await arranger.cleanDatabase()
-
-    database = DrizzleManager.getDatabase()
     postgresUserRepository = new DrizzlePostgresUserRepository(database)
 })
 

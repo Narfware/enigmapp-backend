@@ -2,16 +2,18 @@ import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers
 import { DrizzleManager } from '../../../../../src/enigma/shared/infrastructure/persistence/postgres/drizzle/connection'
 import { readMigrationFiles } from 'drizzle-orm/migrator'
 import { Pool } from 'pg'
+import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 
 export class DrizzlePostgresArranger {
     private container?: StartedPostgreSqlContainer
     private pool?: Pool
 
-    public async initializeDatabase(): Promise<void> {
+    public async initializeDatabase(): Promise<NodePgDatabase> {
         this.container = await new PostgreSqlContainer('postgres:13-alpine').start()
         const connectionString = this.container.getConnectionUri()
 
-        DrizzleManager.createClient({ connectionUrl: connectionString })
+        const database = DrizzleManager.createClient({ connectionUrl: connectionString })
+
         this.pool = DrizzleManager.getPool()
 
         const migrations = readMigrationFiles({ migrationsFolder: './drizzle' })
@@ -20,6 +22,8 @@ export class DrizzlePostgresArranger {
                 await this.pool!.query(sql)
             }
         }
+
+        return database
     }
 
     public async cleanDatabase(): Promise<void> {

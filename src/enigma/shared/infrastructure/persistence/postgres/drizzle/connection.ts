@@ -29,12 +29,6 @@ export class DrizzleManager {
         return DrizzleManager.pool
     }
 
-    public static getDatabase(): NodePgDatabase {
-        if (!DrizzleManager.database) throw new Error('DrizzleManager not initialized')
-
-        return DrizzleManager.database
-    }
-
     public static async close(): Promise<void> {
         if (DrizzleManager.pool) {
             await DrizzleManager.pool.end()

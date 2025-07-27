@@ -1,24 +1,18 @@
 import { Request, Response } from 'express'
 import { CreateUser } from '../../application/createUser'
-import { DrizzlePostgresUserRepository } from '../repositories/postgresUserRepository'
-import { DrizzleManager } from '../../../../shared/infrastructure/persistence/postgres/drizzle/connection'
-import { NodeCryptoNonceGenerator } from '../nodeCryptoNonceGenerator'
-import { NodeTimeProvider } from '../nodeTimeProvider'
+import { getAuthenticationContainer } from '../dependency-injection'
 
-type CreateUserParams = {
+type CreateUserRequestParams = {
     id: string
     nickName: string
     publicKey: string
 }
 
 export class CreateUserController {
-    async execute(request: Request<never, never, CreateUserParams>, response: Response): Promise<void> {
+    async execute(request: Request<never, never, CreateUserRequestParams>, response: Response): Promise<void> {
         const { id, nickName, publicKey } = request.body
 
-        const userRepository = new DrizzlePostgresUserRepository(DrizzleManager.getDatabase())
-        const nonceGenerator = new NodeCryptoNonceGenerator(new NodeTimeProvider())
-
-        const useCase = new CreateUser(userRepository, nonceGenerator)
+        const useCase = getAuthenticationContainer().get(CreateUser)
         await useCase.execute({
             id,
             nickName,

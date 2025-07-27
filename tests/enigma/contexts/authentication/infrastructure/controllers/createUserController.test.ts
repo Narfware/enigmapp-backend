@@ -4,12 +4,14 @@ import { Server } from '../../../../../../src/enigma/shared/infrastructure/serve
 import { Server as HttpServer } from 'node:http'
 import { beforeEach } from 'node:test'
 import { DrizzlePostgresArranger } from '../../../../shared/infrastructure/persistence/drizzlePostgresArranger'
+import { initAuthenticationContainer } from '../../../../../../src/enigma/contexts/authentication/infrastructure/dependency-injection'
 
 let httpServer: HttpServer
 const arranger = new DrizzlePostgresArranger()
 
 beforeAll(async () => {
-    await arranger.initializeDatabase()
+    const database = await arranger.initializeDatabase()
+    initAuthenticationContainer(database)
 
     const server = new Server('8080')
     await server.listenHttp()

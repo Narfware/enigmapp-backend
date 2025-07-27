@@ -1,3 +1,5 @@
+import { initAuthenticationContainer } from './contexts/authentication/infrastructure/dependency-injection'
+import { DrizzleManager } from './shared/infrastructure/persistence/postgres/drizzle/connection'
 import { Server } from './shared/infrastructure/server'
 
 export class EnigmApp {
@@ -7,11 +9,16 @@ export class EnigmApp {
         const port = process.env.PORT || '8080'
         this.server = new Server(port)
 
-        this.server.listenHttp()
+        if (!process.env.DATABASE_URL) throw Error('Database url not specified')
+
+        const database = DrizzleManager.createClient({ connectionUrl: process.env.DATABASE_URL })
+        initAuthenticationContainer(database)
+
+        await this.server.listenHttp()
     }
 
     async stop() {
-        this.server?.stop()
+        await this.server?.stop()
     }
 }
 
