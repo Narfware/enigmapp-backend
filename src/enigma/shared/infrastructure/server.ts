@@ -4,6 +4,7 @@ import { Server as SocketServer } from 'socket.io'
 import bodyParser from 'body-parser'
 import compress from 'compression'
 import helmet from 'helmet'
+import { CreateUserController } from '../../contexts/authentication/infrastructure/controllers/createUserController'
 
 export class Server {
     private _express: Express
@@ -22,8 +23,19 @@ export class Server {
         this._express.use(helmet.frameguard({ action: 'deny' }))
         this._express.use(compress())
 
+        this.setupRoutes()
+
         this._httpServer = createServer(this._express)
         this._socketServer = new SocketServer(this._httpServer)
+    }
+
+    private setupRoutes() {
+        const router = express.Router()
+
+        const createUserController = new CreateUserController()
+        router.route('/users/').post(createUserController.execute.bind(createUserController))
+
+        this._express.use(router)
     }
 
     async listenHttp(): Promise<void> {
