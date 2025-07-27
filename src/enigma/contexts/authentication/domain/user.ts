@@ -43,8 +43,8 @@ export class User {
         nonceValue: string,
         signature: string
     ): void {
-        if (this.nonce.isExpired(timeProvider.now())) throw new InvalidNonce()
-        if (!this.nonce.hasSameValue(nonceValue)) throw new InvalidNonce()
+        if (this.nonce.isExpired(timeProvider.now())) throw new InvalidNonce('Nonce expired')
+        if (!this.nonce.hasSameValue(nonceValue)) throw new InvalidNonce('Nonce disabled')
 
         const { isValidSignature } = signatureVerifier.checkIsValidSignatureForNonce(
             this.nonce,

@@ -5,6 +5,7 @@ import bodyParser from 'body-parser'
 import compress from 'compression'
 import helmet from 'helmet'
 import { CreateUserController } from '../../contexts/authentication/infrastructure/controllers/createUserController'
+import { AuthenticateChallengeController } from '../../contexts/authentication/infrastructure/controllers/authenticateChallengeController'
 
 export class Server {
     private _express: Express
@@ -33,7 +34,12 @@ export class Server {
         const router = express.Router()
 
         const createUserController = new CreateUserController()
+        const authenticateChallengeController = new AuthenticateChallengeController()
+
         router.route('/users/').post(createUserController.execute.bind(createUserController))
+        router
+            .route('/users/:userId/auth/challenge')
+            .post(authenticateChallengeController.execute.bind(authenticateChallengeController))
 
         this._express.use(router)
     }

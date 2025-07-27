@@ -9,12 +9,16 @@ import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { usersTable } from '../../../../../../src/enigma/contexts/authentication/infrastructure/persistence/postgres/drizzle/schemas/userSchema'
 import { generateKeyPairSync, sign } from 'node:crypto'
 import { NonceMother } from '../../domain/NonceMother'
+import { Time } from '../../../../../../src/enigma/contexts/authentication/domain/value-objects/time'
+import jwt from 'jsonwebtoken'
 
 let httpServer: HttpServer
 const arranger = new DrizzlePostgresArranger()
 let database: NodePgDatabase
 
 beforeAll(async () => {
+    process.env.JWT_PRIVATE_KEY = 'privateKey'
+
     database = await arranger.initializeDatabase()
     initAuthenticationContainer(database)
 
@@ -37,7 +41,9 @@ afterAll(async () => {
 describe('Authenticate challenge controller', () => {
     it('Should return 200 with JWT', async () => {
         const userId = 'ba765868-4fd3-4d14-b982-2eba9fe9d893'
-        const nonce = NonceMother.create('randomStringInBase64==')
+
+        const expirationTime = Time.now().addMinutes(2)
+        const nonce = NonceMother.create('randomStringInBase64==', expirationTime)
 
         const { publicKey, privateKey } = generateKeyPairSync('rsa', {
             modulusLength: 2048,
@@ -62,10 +68,16 @@ describe('Authenticate challenge controller', () => {
             nonceExpirationTime: nonce.expirationTime.toPrimitives()
         })
 
-        const response = await request(httpServer)
+        const {
+            statusCode,
+            body: { token }
+        } = await request(httpServer)
             .post(`/users/${userId}/auth/challenge`)
             .send({ nonce: nonce.value, signature: signature })
 
-        expect(response.statusCode).toBe(200)
+        const decodedToken = jwt.decode(token, { json: true })
+
+        expect(statusCode).toBe(200)
+        expect(decodedToken?.sub).toBe(userId)
     })
 })

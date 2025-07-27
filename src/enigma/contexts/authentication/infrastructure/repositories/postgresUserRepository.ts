@@ -14,13 +14,24 @@ export class DrizzlePostgresUserRepository implements UserRepository {
     async save(user: User): Promise<void> {
         const primitiveUser = user.toPrimitives()
 
-        await this.database.insert(usersTable).values({
-            id: primitiveUser.id,
-            nickName: primitiveUser.nickName,
-            publicKey: primitiveUser.publicKey,
-            nonce: primitiveUser.nonce.value,
-            nonceExpirationTime: primitiveUser.nonce.expirationTime
-        })
+        await this.database
+            .insert(usersTable)
+            .values({
+                id: primitiveUser.id,
+                nickName: primitiveUser.nickName,
+                publicKey: primitiveUser.publicKey,
+                nonce: primitiveUser.nonce.value,
+                nonceExpirationTime: primitiveUser.nonce.expirationTime
+            })
+            .onConflictDoUpdate({
+                target: usersTable.id,
+                set: {
+                    nickName: primitiveUser.nickName,
+                    publicKey: primitiveUser.publicKey,
+                    nonce: primitiveUser.nonce.value,
+                    nonceExpirationTime: primitiveUser.nonce.expirationTime
+                }
+            })
     }
 
     async find(id: string): Promise<User> {

@@ -4,6 +4,9 @@ import { CreateUser } from '../../application/createUser'
 import { NodeCryptoNonceGenerator } from '../nodeCryptoNonceGenerator'
 import { NodeTimeProvider } from '../nodeTimeProvider'
 import { DrizzlePostgresUserRepository } from '../repositories/postgresUserRepository'
+import { Auth0JWTProvider } from '../auth0JwtProvider'
+import { NodeCryptoSignatureVerifier } from '../nodeCryptoSignatureVerifier'
+import { AuthenticateChallenge } from '../../application/authenticateChallenge'
 
 export class AuthenticationContainer {
     constructor(private database: NodePgDatabase) {}
@@ -13,9 +16,21 @@ export class AuthenticationContainer {
 
         const userRepository = new DrizzlePostgresUserRepository(this.database)
         const nonceGenerator = new NodeCryptoNonceGenerator(new NodeTimeProvider())
-        const useCase = new CreateUser(userRepository, nonceGenerator)
+        const jwtProvider = new Auth0JWTProvider()
+        const signatureVerifier = new NodeCryptoSignatureVerifier()
+        const timeProvider = new NodeTimeProvider()
 
-        container.register(CreateUser, useCase)
+        const createUser = new CreateUser(userRepository, nonceGenerator)
+        const authenticateChallenge = new AuthenticateChallenge(
+            userRepository,
+            signatureVerifier,
+            jwtProvider,
+            nonceGenerator,
+            timeProvider
+        )
+
+        container.register(CreateUser, createUser)
+        container.register(AuthenticateChallenge, authenticateChallenge)
 
         return container
     }

@@ -4,7 +4,7 @@ import { SignatureVerifier } from '../domain/interfaces/signatureVerifier'
 import { TimeProvider } from '../domain/interfaces/timeProvider'
 import { UserRepository } from '../domain/repositories/userRepository'
 
-type Params = {
+type AuthenticateChallengeParams = {
     id: string
     nonceValue: string
     signature: string
@@ -19,11 +19,11 @@ export class AuthenticateChallenge {
         private timeProvider: TimeProvider
     ) {}
 
-    public async execute({ id, nonceValue, signature }: Params): Promise<string> {
+    public async execute({ id, nonceValue, signature }: AuthenticateChallengeParams): Promise<string> {
         const user = await this.userRepository.find(id)
-        user.verifyNonce(this.signatureVerifier, this.nonceGenerator, this.timeProvider, nonceValue, signature)
 
-        this.userRepository.save(user)
+        user.verifyNonce(this.signatureVerifier, this.nonceGenerator, this.timeProvider, nonceValue, signature)
+        await this.userRepository.save(user)
 
         return this.jwtProvider.signUser(user)
     }
